@@ -1,0 +1,34 @@
+---
+- hosts: docker
+  become: true
+  tasks:
+    - name: install java8
+      yum: 
+        name: java-1.8.0-openjdk-devel
+        state: present
+      when: ansible_os_family == "RedHat" 
+    - name: uninstall java7
+      yum: 
+        name: java-1.7.0-openjdk
+        state: absent
+      when: ansible_os_family == "RedHat"
+    - name: install python3
+      yum: 
+        name: python3-devel
+        state: present
+    - name: install python3 pip
+      yum: 
+        name: python3-pip
+        state: present
+    - name: install docker-py
+      pip:
+        name: docker-py
+        executable: pip3
+        state: latest
+    - name: pull jenkins latest docker image
+      docker_image:
+        name: jenkins
+        tag: latest
+        source: pull
+
+    
